@@ -16,10 +16,8 @@ from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtensio
 
 
 def read(*names, **kwargs):
-    with io.open(
-        os.path.join(os.path.dirname(__file__), *names),
-        encoding=kwargs.get("encoding", "utf8")
-    ) as fp:
+    with io.open(os.path.join(os.path.dirname(__file__), *names),
+                 encoding=kwargs.get("encoding", "utf8")) as fp:
         return fp.read()
 
 
@@ -37,7 +35,8 @@ package_name = 'torchvision'
 cwd = os.path.dirname(os.path.abspath(__file__))
 
 try:
-    sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=cwd).decode('ascii').strip()
+    sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'],
+                                  cwd=cwd).decode('ascii').strip()
 except Exception:
     pass
 
@@ -83,9 +82,10 @@ def get_extensions():
 
     main_file = glob.glob(os.path.join(extensions_dir, '*.cpp'))
     source_cpu = glob.glob(os.path.join(extensions_dir, 'cpu', '*.cpp'))
+    source_image = glob.glob(os.path.join(extensions_dir, 'image', '*.cpp'))
     source_cuda = glob.glob(os.path.join(extensions_dir, 'cuda', '*.cu'))
 
-    sources = main_file + source_cpu
+    sources = main_file + source_cpu + source_image
     extension = CppExtension
 
     compile_cpp_tests = os.getenv('WITH_CPP_MODELS_TEST', '0') == '1'
@@ -103,7 +103,8 @@ def get_extensions():
     define_macros = []
 
     extra_compile_args = {}
-    if (torch.cuda.is_available() and CUDA_HOME is not None) or os.getenv('FORCE_CUDA', '0') == '1':
+    if (torch.cuda.is_available() and CUDA_HOME is not None) or os.getenv(
+            'FORCE_CUDA', '0') == '1':
         extension = CUDAExtension
         sources += source_cuda
         define_macros += [('WITH_CUDA', None)]
@@ -135,13 +136,16 @@ def get_extensions():
         ffmpeg_include_dir = os.path.join(ffmpeg_root, 'include')
 
         # TorchVision video reader
-        video_reader_src_dir = os.path.join(this_dir, 'torchvision', 'csrc', 'cpu', 'video_reader')
-        video_reader_src = glob.glob(os.path.join(video_reader_src_dir, "*.cpp"))
+        video_reader_src_dir = os.path.join(this_dir, 'torchvision', 'csrc',
+                                            'cpu', 'video_reader')
+        video_reader_src = glob.glob(
+            os.path.join(video_reader_src_dir, "*.cpp"))
 
     ext_modules = [
         extension(
             'torchvision._C',
             sources,
+            libraries=["png"],
             include_dirs=include_dirs,
             define_macros=define_macros,
             extra_compile_args=extra_compile_args,
@@ -155,8 +159,7 @@ def get_extensions():
                 include_dirs=tests_include_dirs,
                 define_macros=define_macros,
                 extra_compile_args=extra_compile_args,
-            )
-        )
+            ))
     if has_ffmpeg:
         ext_modules.append(
             CppExtension(
@@ -176,8 +179,7 @@ def get_extensions():
                 ],
                 extra_compile_args=["-std=c++14"],
                 extra_link_args=["-std=c++14"],
-            )
-        )
+            ))
 
     return ext_modules
 
@@ -209,8 +211,7 @@ setup(
     license='BSD',
 
     # Package info
-    packages=find_packages(exclude=('test',)),
-
+    packages=find_packages(exclude=('test', )),
     zip_safe=False,
     install_requires=requirements,
     extras_require={
@@ -220,5 +221,4 @@ setup(
     cmdclass={
         'build_ext': BuildExtension.with_options(no_python_abi_suffix=True),
         'clean': clean,
-    }
-)
+    })

@@ -2,18 +2,13 @@
 #define READPNG_H
 
 #include <torch/torch.h>
+#include <string>
 
-namespace torch {
-namespace vision {
 namespace image {
-namespace impl {
-
-bool is_png(const void* data);
-torch::Tensor read_png(const void* data);
-
-} // namespace impl
+  namespace png {
+  torch::Tensor decode_png(const torch::Tensor& data);
+  torch::Tensor read_png_from_file(const std::string& path);
+  } // namespace png
 } // namespace image
-} // namespace vision
-} // namespace torch
 
 #endif // READPNG_H

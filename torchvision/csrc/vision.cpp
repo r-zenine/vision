@@ -1,5 +1,6 @@
 #include <Python.h>
 #include <torch/script.h>
+#include "image/readpng.h"
 
 #ifdef WITH_CUDA
 #include <cuda.h>
@@ -49,4 +50,6 @@ static auto registry =
         .op("torchvision::ps_roi_align", &ps_roi_align)
         .op("torchvision::ps_roi_pool", &ps_roi_pool)
         .op("torchvision::deform_conv2d", &deform_conv2d)
+        .op("torchvision::decode_png", &image::png::decode_png)
+        .op("torchvision::read_png_from_file", &image::png::read_png_from_file)
         .op("torchvision::_cuda_version", &_cuda_version);
