@@ -15,11 +15,12 @@ def decode_png(input):
     Returns:
         output (Tensor[image_width, image_height, 3])
     """
-    if not isinstance(raw_data, torch.Tensor) or len(raw_data) == 0:
+    if not isinstance(input, torch.Tensor) or len(input) == 0:
         raise ValueError("Expected a non empty 1-dimensional tensor.")
-    if not raw_data.dtype == torch.uint8:
+
+    if not input.dtype == torch.uint8:
         raise ValueError("Expected a torch.uint8 tensor.")
-    output = torch.ops.torchvision.decode_png(raw_data)
+    output = torch.ops.torchvision.decode_png(input)
     return output
 
 
