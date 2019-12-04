@@ -18,7 +18,8 @@ from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtensio
 def read(*names, **kwargs):
     with io.open(os.path.join(
         os.path.dirname(__file__), *names),
-        encoding=kwargs.get("encoding", "utf8")) as fp:
+        encoding=kwargs.get("encoding", "utf8")
+    ) as fp:
         return fp.read()
 
 
@@ -211,6 +212,7 @@ setup(
 
     # Package info
     packages=find_packages(exclude=('test', )),
+
     zip_safe=False,
     install_requires=requirements,
     extras_require={
