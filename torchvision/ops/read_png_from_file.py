@@ -23,7 +23,7 @@ def read_png_from_file(path):
 
 class ReadPNGFromFile(nn.Module):
     """
-    See ps_roi_pool
+    See read_png_from_file
     """
     def __init__(self):
         super(ReadPNGFromFile, self).__init__()

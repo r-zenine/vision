@@ -26,7 +26,7 @@ def decode_png(input):
 
 class DecodePNG(nn.Module):
     """
-    See ps_roi_pool
+    See decode_png
     """
     def __init__(self):
         super(DecodePNG, self).__init__()
