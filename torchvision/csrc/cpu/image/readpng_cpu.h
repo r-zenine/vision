@@ -4,4 +4,3 @@
 #include <string>
 
 torch::Tensor decodePNG(const torch::Tensor& data);
-

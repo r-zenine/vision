@@ -1,8 +1,8 @@
 #include "readpng_cpu.h"
 
-#include <torch/torch.h>
 #include <png.h>
 #include <setjmp.h>
+#include <torch/torch.h>
 #include <string>
 
 torch::Tensor decodePNG(const torch::Tensor& data) {
@@ -17,7 +17,7 @@ torch::Tensor decodePNG(const torch::Tensor& data) {
   }
 
   auto datap = data.accessor<unsigned char, 1>().data();
-  
+
   if (setjmp(png_jmpbuf(png_ptr)) != 0) {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     auto errptr = static_cast<png_const_charp>(png_get_error_ptr(png_ptr));
@@ -55,13 +55,14 @@ torch::Tensor decodePNG(const torch::Tensor& data) {
       nullptr,
       nullptr);
 
-  if (retval != 1 ) {
+  if (retval != 1) {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
     TORCH_CHECK(retval == 1, "Could read image metadata from content.")
   }
-  if ( color_type != PNG_COLOR_TYPE_RGB ) {
+  if (color_type != PNG_COLOR_TYPE_RGB) {
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-    TORCH_CHECK(color_type == PNG_COLOR_TYPE_RGB, "Non RGB images are not supported.")
+    TORCH_CHECK(
+        color_type == PNG_COLOR_TYPE_RGB, "Non RGB images are not supported.")
   }
 
   auto tensor =
