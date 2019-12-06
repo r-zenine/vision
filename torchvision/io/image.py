@@ -1,5 +1,6 @@
 import torch
 from torch import nn, Tensor
+import os
 
 
 def decode_png(input):
@@ -23,18 +24,23 @@ def decode_png(input):
     output = torch.ops.torchvision.decode_png(input)
     return output
 
-
-class DecodePNG(nn.Module):
+def read_png(path):
+    # type: (str) -> Tensor
     """
-    See decode_png
+    Reads a PNG image into a 3 dimensional RGB Tensor.
+    The values of the output tensor are uint8 between 0 and 255.
+
+    Arguments:
+        path (str): path of the PNG image.
+
+    Returns:
+        output (Tensor[image_width, image_height, 3])
     """
-    def __init__(self):
-        super(DecodePNG, self).__init__()
+    if not os.path.isfile(path):
+        raise ValueError("Excepted a valid file path.")
 
-    def forward(self, input):
-        return decode_png(input)
-
-    def __repr__(self):
-        tmpstr = self.__class__.__name__ + '('
-        tmpstr += ')'
-        return tmpstr
+    size = os.path.getsize(path)
+    if size == 0 :
+        raise ValueError("Excepted a non empty file.")
+    data = torch.from_file(path, dtype=torch.uint8, size=size)
+    return decode_png(data)

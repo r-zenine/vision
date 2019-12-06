@@ -1,14 +1,11 @@
-#include "readpng.h"
+#include "readpng_cpu.h"
 
 #include <torch/torch.h>
 #include <png.h>
 #include <setjmp.h>
 #include <string>
 
-namespace image {
-namespace png {
-
-torch::Tensor decode_png(const torch::Tensor& data) {
+torch::Tensor decodePNG(const torch::Tensor& data) {
   auto png_ptr =
       png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   TORCH_CHECK(png_ptr, "libpng read structure allocation failed!")
@@ -78,19 +75,3 @@ torch::Tensor decode_png(const torch::Tensor& data) {
   png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
   return tensor;
 }
-
-torch::Tensor read_png_from_file(const std::string& path) {
-  auto options =
-      torch::TensorOptions().dtype(torch::kU8);
-
-  std::ifstream file(path, std::ios::binary | std::ios::ate);
-  TORCH_CHECK(file.is_open(), "File does not exist!.");
-  std::streamsize size = file.tellg();
-  TORCH_CHECK(size > 0, "File is empty!.");
-  file.close();
-
-  auto data = torch::from_file(path, false, size, options).contiguous();
-  return decode_png(data);
-}
-} // namespace png
-} // namespace image

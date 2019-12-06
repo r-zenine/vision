@@ -3,7 +3,7 @@ import unittest
 
 import torch
 from PIL import Image
-from torchvision.ops import decode_png, read_png_from_file
+from torchvision.io.image import read_png, decode_png
 import numpy as np
 
 IMAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "fakedata", "imagefolder")
@@ -16,17 +16,18 @@ def get_png_images(directory):
                 yield os.path.join(root, fl)
 
 
-class ReadPngTester(unittest.TestCase): 
-    def test_read_png_from_file(self):
+class ImageTester(unittest.TestCase): 
+    def test_read_png(self):
         for img_path in get_png_images(IMAGE_DIR):
             img_pil = torch.from_numpy(np.array(Image.open(img_path)))
-            img_lpng = read_png_from_file(img_path)
+            img_lpng = read_png(img_path)
             self.assertTrue(torch.all(img_lpng == img_pil))
         
-    def test_read_png_from_file(self):
+    def test_decode_png(self):
         for img_path in get_png_images(IMAGE_DIR):
             img_pil = torch.from_numpy(np.array(Image.open(img_path)))
-            img_lpng = decode_png(torch.from_numpy(np.fromfile(img_path, dtype=np.uint8)))
+            size = os.path.getsize(img_path)
+            img_lpng = decode_png(torch.from_file(img_path, dtype=torch.uint8, size=size))
             self.assertTrue(torch.all(img_lpng == img_pil))
     
 
