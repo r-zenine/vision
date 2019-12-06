@@ -19,6 +19,7 @@ requirements:
   run:
     - python
     - pillow >=4.1.1
+    - libpng >=1.6.37
     - numpy >=1.11
     - six
     {{ environ.get('CONDA_PYTORCH_CONSTRAINT') }}

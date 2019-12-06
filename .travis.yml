@@ -57,7 +57,7 @@ before_install:
       pip install -q --user -i https://test.pypi.org/simple/ ort-nightly==1.0.0.dev1123
     fi
   - conda install av -c conda-forge
-
+  - sudo apt-get install libpng-dev
 
 install:
   # Using pip instead of setup.py ensures we install a non-compressed version of the package

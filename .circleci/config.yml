@@ -117,7 +117,7 @@ jobs:
         name: Setup environment
         command: |
           set -e
-
+  
           curl -L https://packagecloud.io/circleci/trusty/gpgkey | sudo apt-key add -
           curl -L https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 
@@ -129,6 +129,7 @@ jobs:
               curl \
               gnupg-agent \
               software-properties-common
+              libpng-dev
 
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
